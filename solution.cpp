@@ -109,12 +109,9 @@ void solution::fit_fun(matrix *ud, matrix *ad)
 	y = sin(arg) / arg;
 	// y = pow(x(0),2) + pow(x(1),2);
 
-// *ad - dwuelementowy wektor z 'ci' i 'dc', czyli (*ad)(0) = ci; i-indeks
-// *ud - user data, [a] - parametr a z konspektu: 4, 4.4934, 5
-
 	if ((*ad)(1) > 1) //kara zew
 	{
-		//cout << "\nKARA ZEW" << endl;
+
 		if (-x(0) + 1 > 0)// funckja g1 z konspektu
 			y = y + (*ad)(0) * pow(-x(0) + 1, 2);
 		if (-x(1) + 1 > 0)
@@ -124,7 +121,6 @@ void solution::fit_fun(matrix *ud, matrix *ad)
 	}
 	else //kara wew
 	{
-		//cout << "\nKARA WEW" << endl;
 		if (-x(0) + 1 > 0)
 			y = 1e10;// kara nieskoñoczonoœæ
 		else
@@ -138,50 +134,7 @@ void solution::fit_fun(matrix *ud, matrix *ad)
 		else
 			y = y - (*ad)(0) / (sqrt(pow(x(0), 2) + pow(x(1), 2)) - (*ud)(0));
 	}
-	/*
-	double arg = 3.14 * sqrt(pow(x(0) / 3.14, 2) + pow(x(1) / 3.14, 2));
-	y = sin(arg) / arg;
 
-	//y = pow(x(0), 2) + pow(x(1), 2);
-
-	// zewnetrzna
-	
-	if ((*ad)(1) > 1)
-	{
-		if (-x(0) + 1 > 0) {
-			y = y + (*ad)(0) * pow(-x(0) + 1, 2);
-		}
-
-		if (-x(1) + 1 > 0) {
-			y = y + (*ad)(0) * pow(-x(1) + 1, 2);
-		}
-
-		if (sqrt(pow(x(0), 2) + pow(x(1), 2)) - (*ud)(0) > 0)
-			y = y + (*ad)(0) * pow(sqrt(pow(x(0), 2) + pow(x(1), 2)) - (*ud)(0), 2);
-	}
-	else {
-		// wewnetrzna
-		if (-x(0) + 1 > 0) {
-			y = 1e+10;
-		}
-		else {
-			y = y - (*ad)(0) / (-x(0) + 1);
-		}
-
-		if (-x(1) + 1 > 0) {
-			y = 1e+10;
-		}
-		else {
-			y = y - (*ad)(0) / (-x(1) + 1);
-		}
-
-		if (sqrt(pow(x(0), 2) + pow(x(1), 2)) - (*ud)(0) > 0) {
-			y = 1e+10;
-		}
-		else {
-			y = y - (*ad)(0) / (sqrt(pow(x(0), 2) + pow(x(1), 2)) - (*ud)(0));
-		}
-	}*/
 #elif LAB_NO==3 && LAB_PART==2
 	matrix Y0 = matrix(4, new double[4]{ 0,x(0),100,0 });
 	matrix* Y = solve_ode(0, 0.01, 7, Y0, &matrix(x(1)));

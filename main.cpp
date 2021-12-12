@@ -358,6 +358,10 @@ pen_zew.close();
 pen_wew.close();
 
 #elif LAB_NO==3 && LAB_PART==2
+matrix x0(2, 1, 2), c = 1;
+solution test(x0);
+test.fit_fun(nullptr, &c);
+cout << test << endl;
 
 #elif LAB_NO==4 && LAB_PART==1
 
