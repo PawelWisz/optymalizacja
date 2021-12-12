@@ -358,6 +358,7 @@ pen_zew.close();
 pen_wew.close();
 
 #elif LAB_NO==3 && LAB_PART==2
+
 matrix x0(2, 1, 2), c = 1;
 solution test(x0);
 test.fit_fun(nullptr, &c);
@@ -365,9 +366,38 @@ cout << test << endl;
 
 #elif LAB_NO==4 && LAB_PART==1
 
+matrix x0 = 20 * rand_mat(2, 1) - 10;
+double epsilon = 1e-3, h0 = -0.05;  //h0 ustala krok, jesli minus to jest zmiennokrokowe i g_calls and h_calls
+int Nmax = 10000;
+
+solution opt;
+opt = SD(x0, h0, epsilon, Nmax);
+
+cout << opt << endl << endl;
+solution::clear_calls();
+
+opt = CG(x0, h0, epsilon, Nmax);
+cout << opt << endl << endl;
+solution::clear_calls();
+
+opt = Newton(x0, h0, epsilon, Nmax);  // h0 ujemnym g_calls i h_calls musi byc pomiedzy 2-3
+cout << opt << endl << endl;
+solution::clear_calls();
+
+
 #elif LAB_NO==4 && LAB_PART==2
 
+//ud jak w cwicz 2, wyciagac punky z ud
+
 #elif LAB_NO==4 && LAB_PART==3
+
+matrix x0(3, new double[3]{ -1,0.1,0.1 });
+solution test(x0);
+test.fit_fun();
+test.grad();
+
+cout << test << endl;
+cout << test.g << endl;
 
 #elif LAB_NO==5 && LAB_PART==1
 
