@@ -11,6 +11,8 @@ AGH University of Science and Technology
 #include"solution.h"
 
 
+
+
 struct Comma final : std::numpunct<char>
 {
 	char do_decimal_point() const override { return ','; }
@@ -366,38 +368,120 @@ cout << test << endl;
 
 #elif LAB_NO==4 && LAB_PART==1
 
-matrix x0 = 20 * rand_mat(2, 1) - 10;
-double epsilon = 1e-3, h0 = -0.05;  //h0 ustala krok, jesli minus to jest zmiennokrokowe i g_calls and h_calls
-int Nmax = 10000;
+std::ofstream SD_method;
+std::ofstream CG_method;
+std::ofstream Newton_method;
+SD_method.imbue(std::locale(std::locale::classic(), new Comma));
+CG_method.imbue(std::locale(std::locale::classic(), new Comma));
+Newton_method.imbue(std::locale(std::locale::classic(), new Comma));
+SD_method.open("Lab04_P01_SD.csv");
+CG_method.open("Lab04_P01_CG.csv");
+Newton_method.open("Lab04_P01_Newton.csv");
 
-solution opt;
-opt = SD(x0, h0, epsilon, Nmax);
+for (int i = 0; i < 100; i++) {
+	matrix x0 = 20 * rand_mat(2, 1) - 10;
+	double epsilon = 1e-3;
+	//double h0 = 0.05;  //h0 ustala krok, jesli minus to jest zmiennokrokowe 
+	double h0 = 0.12;
+	//double h0 = -0.05;
+	int Nmax = 10000;
 
-cout << opt << endl << endl;
-solution::clear_calls();
+	solution opt;
+	opt = SD(x0, h0, epsilon, Nmax);
 
-opt = CG(x0, h0, epsilon, Nmax);
-cout << opt << endl << endl;
-solution::clear_calls();
+	cout << "Metoda najszybszego spadku" << endl;
+	cout << opt << endl << endl;
+	SD_method << x0(0) << ";" << x0(1) << ";" << opt.x(0) << ";" << opt.x(1) << ";" << opt.y(0) << ";" << opt.f_calls << ";" << opt.g_calls << "\n";
+	solution::clear_calls();
 
-opt = Newton(x0, h0, epsilon, Nmax);  // h0 ujemnym g_calls i h_calls musi byc pomiedzy 2-3
-cout << opt << endl << endl;
-solution::clear_calls();
+	opt = CG(x0, h0, epsilon, Nmax);
 
+	cout << "Metoda gradientow sprzezonych" << endl;
+	cout << opt << endl << endl;
+	CG_method << opt.x(0) << ";" << opt.x(1) << ";" << opt.y(0) << ";" << opt.f_calls << ";" << opt.g_calls << "\n";
+	solution::clear_calls();
+
+	opt = Newton(x0, h0, epsilon, Nmax);  // if h0 < 0 g_calls i h_calls musi byc pomiedzy 2-3
+
+	cout << "Metoda Newtona" << endl;
+	cout << opt << endl << endl;
+	Newton_method << opt.x(0) << ";" << opt.x(1) << ";" << opt.y(0) << ";" << opt.f_calls << ";" << opt.g_calls << ";" << opt.H_calls << "\n";
+	solution::clear_calls();
+}
+SD_method.close();
+CG_method.close();
+Newton_method.close();
 
 #elif LAB_NO==4 && LAB_PART==2
 
-//ud jak w cwicz 2, wyciagac punky z ud
+std::ofstream SD_method;
+std::ofstream CG_method;
+std::ofstream Newton_method;
+SD_method.imbue(std::locale(std::locale::classic(), new Comma));
+CG_method.imbue(std::locale(std::locale::classic(), new Comma));
+Newton_method.imbue(std::locale(std::locale::classic(), new Comma));
+SD_method.open("Lab04_P02_SD.csv");
+CG_method.open("Lab04_P02_CG.csv");
+Newton_method.open("Lab04_P02_Newton.csv");
+
+
+matrix x0(2, new double[2]{ 1.61514 , -1.16231});
+double epsilon = 1e-3;
+//double h0 = 0.05;
+//double h0 = 0.12;
+double h0 = -0.05;
+int row=100;
+int col=2;
+int Nmax = 10000;
+
+matrix ud_SD(trans(x0));
+solution opt;
+cout << "Metoda najszybszego spadku" << endl << endl;
+opt = SD(x0, h0, epsilon, Nmax, &ud_SD);
+cout << opt << endl;
+cout << "maciez ud" << endl;
+cout << ud_SD << endl;
+SD_method << ud_SD << endl;
+solution::clear_calls();
+
+matrix ud_CG(trans(x0));
+cout << "Metoda gradientow sprzezonych" << endl << endl;
+opt = CG(x0, h0, epsilon, Nmax, &ud_CG);
+cout << opt << endl;
+cout << "maciez ud" << endl;
+cout << ud_CG << endl;
+CG_method << ud_CG << endl;
+solution::clear_calls();
+
+
+matrix ud_Newton(trans(x0));
+cout << "Metoda Newtona" << endl << endl;
+opt = Newton(x0, h0, epsilon, Nmax, &ud_Newton);
+cout << opt << endl;
+cout << "maciez ud" << endl;
+cout << ud_Newton << endl;
+Newton_method << ud_Newton << endl;
+solution::clear_calls();
+
+SD_method.close();
+CG_method.close();
+Newton_method.close();
 
 #elif LAB_NO==4 && LAB_PART==3
 
-matrix x0(3, new double[3]{ -1,0.1,0.1 });
-solution test(x0);
-test.fit_fun();
-test.grad();
+double steps[3] = { 0.01, 0.001, 0.0001 };
+double epsilon = 1e-5;
+int Nmax = 10000;
 
-cout << test << endl;
-cout << test.g << endl;
+for (int i = 0; i < 3; i++)
+{
+	matrix x0(3, new double[3]{ 0, 0, 0 });
+	double h0 = steps[i];
+
+	solution opt = CG(x0, h0, epsilon, Nmax);
+	cout << opt << endl;
+	solution::clear_calls();
+}
 
 #elif LAB_NO==5 && LAB_PART==1
 
