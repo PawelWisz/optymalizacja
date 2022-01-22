@@ -531,7 +531,7 @@ solution EA(int N, matrix limits, int mi, int lambda, matrix sigma0, double epsi
 				for (int j = 0; j<mi ; ++j)
 				{
 					s += IFF(j);
-						if (r<=s )
+						if (r <=s )
 						{
 							P[mi + i] = P[j]; // j - wylosowany osobnik
 								break;
@@ -575,7 +575,7 @@ solution EA(int N, matrix limits, int mi, int lambda, matrix sigma0, double epsi
 		}
 		for (int i = 0; i < mi; ++i)
 			P[i] = Pm[i];  //P[i] najlepsza populacja
-		if (solution::f_calls>Nmax)
+		if (solution::f_calls > Nmax)
 			return P[0];
 	}
 }
